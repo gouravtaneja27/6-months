@@ -541,7 +541,7 @@
                         <div class="num" id="secs">--</div>
                         <div class="lbl">Secs</div>
                     </div>
-                    <div id="loveMsg" class="love-msg">I love uhh Aalsii🥹❤️</div>
+                    <div id="loveMsg" class="love-msg">I love uhh aalsii❤️</div>
                 </div>
             </div>
 
@@ -842,8 +842,10 @@
             res.style.border = '1px solid rgba(255,255,255,0.06)'; res.style.padding = '20px'; res.style.borderRadius = '12px'; res.style.zIndex = 400;
             res.innerHTML = `<div style="font-size:18px;font-weight:800;color:white;margin-bottom:8px">Quiz Result</div><div style="margin-bottom:12px">${msg}</div><div style="display:flex;gap:8px;justify-content:flex-end"><button id=playAgain class=\"btn secondary\">Play Again</button><button id=closeRes class=\"btn\">Close</button></div>`;
             document.body.appendChild(res);
-            document.getElementById('closeRes').addEventListener('click', () => { res.remove(); resetQuiz(); });
+            // Play Again should reset the quiz and UI
             document.getElementById('playAgain').addEventListener('click', () => { res.remove(); resetQuiz(); });
+            // Close should only close the dialog — NOT reset or relock images
+            document.getElementById('closeRes').addEventListener('click', () => { res.remove(); });
         }
 
         function resetQuiz() {

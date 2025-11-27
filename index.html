@@ -1,0 +1,861 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Surprise — Happy 6 Months! (Premium)</title>
+    <style>
+        :root {
+            --bg: #0f1724;
+            --card: #0b1220;
+            --accent: #ff6b6b;
+            --soft: #cbd5e1;
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        html,
+        body {
+            height: 100%
+        }
+
+        body {
+            margin: 0;
+            font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
+            background: linear-gradient(180deg, #071028 0%, #0f1724 60%);
+            color: var(--soft);
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 24px;
+            position: relative;
+            overflow-x: hidden
+        }
+
+        /* HEART BACKGROUND */
+        #heart-bg {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden
+        }
+
+        .heart {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            transform: rotate(45deg);
+            opacity: 0.14;
+            filter: blur(6px)
+        }
+
+        .heart:before,
+        .heart:after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 30% 30%, rgba(255, 100, 120, 0.95), rgba(255, 40, 60, 0.85));
+            border-radius: 50%
+        }
+
+        .heart:before {
+            top: -50%;
+            left: 0
+        }
+
+        .heart:after {
+            left: 50%;
+            top: 0
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(30vh) rotate(45deg) scale(0.8);
+                opacity: 0
+            }
+
+            10% {
+                opacity: 0.12
+            }
+
+            100% {
+                transform: translateY(-30vh) rotate(45deg) scale(1.05);
+                opacity: 0
+            }
+        }
+
+        /* container to sit above hearts */
+        .container {
+            max-width: 1100px;
+            width: 100%;
+            position: relative;
+            z-index: 5
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 18px
+        }
+
+        .brand {
+            display: flex;
+            gap: 12px;
+            align-items: center
+        }
+
+        .logo {
+            width: 52px;
+            height: 52px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--accent), #ffa94d);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #111
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 18px
+        }
+
+        header p {
+            margin: 0;
+            font-size: 13px;
+            color: rgba(203, 213, 225, 0.7)
+        }
+
+        .hero {
+            background: linear-gradient(180deg, rgba(255, 107, 107, 0.06), rgba(255, 160, 122, 0.02));
+            border: 1px solid rgba(255, 107, 107, 0.08);
+            padding: 22px;
+            border-radius: 12px;
+            margin-bottom: 18px;
+            display: flex;
+            gap: 18px;
+            align-items: center;
+            flex-wrap: wrap
+        }
+
+        .hero .left {
+            flex: 1;
+            min-width: 220px
+        }
+
+        .hero h2 {
+            margin: 0;
+            font-size: 26px;
+            color: white
+        }
+
+        .hero p {
+            margin: 8px 0 0 0;
+            color: rgba(203, 213, 225, 0.9)
+        }
+
+        .countdown {
+            display: flex;
+            gap: 10px;
+            margin-top: 12px;
+            align-items: center;
+            position: relative
+        }
+
+        .countdown .box {
+            background: var(--card);
+            padding: 10px 14px;
+            border-radius: 8px;
+            text-align: center;
+            min-width: 68px
+        }
+
+        .countdown .num {
+            font-size: 20px;
+            color: white;
+            font-weight: 700
+        }
+
+        .countdown .lbl {
+            font-size: 11px;
+            color: rgba(203, 213, 225, 0.7)
+        }
+
+        /* pulsing love text near timer */
+        .love-msg {
+            position: absolute;
+            right: -14px;
+            top: -34px;
+            font-weight: 900;
+            color: #ffccd5;
+            font-size: 14px;
+            opacity: 0;
+            transform: translateY(6px) scale(0.98);
+            pointer-events: none;
+            text-shadow: 0 6px 22px rgba(255, 50, 90, 0.14)
+        }
+
+        @keyframes lovePop {
+            0% {
+                opacity: 0;
+                transform: translateY(6px) scale(0.98)
+            }
+
+            30% {
+                opacity: 1;
+                transform: translateY(-4px) scale(1.06)
+            }
+
+            100% {
+                opacity: 0;
+                transform: translateY(-18px) scale(0.9)
+            }
+        }
+
+        .hero .cta {
+            display: flex;
+            gap: 8px;
+            flex-direction: column;
+            align-items: flex-end;
+            min-width: 160px
+        }
+
+        .btn {
+            background: var(--accent);
+            color: #111;
+            border: none;
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer
+        }
+
+        .btn.secondary {
+            background: transparent;
+            border: 1px solid rgba(203, 213, 225, 0.08);
+            color: var(--soft)
+        }
+
+        /* Gallery */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 12px;
+            margin-top: 18px
+        }
+
+        .photo {
+            border-radius: 10px;
+            overflow: hidden;
+            cursor: pointer;
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.03)
+        }
+
+        .photo img {
+            display: block;
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            transition: transform .35s, filter .25s
+        }
+
+        .photo:hover img {
+            transform: scale(1.06)
+        }
+
+        .caption {
+            position: absolute;
+            left: 8px;
+            bottom: 8px;
+            background: rgba(0, 0, 0, 0.35);
+            padding: 6px 8px;
+            border-radius: 6px;
+            font-size: 12px
+        }
+
+        .photo.locked img {
+            filter: blur(6px) grayscale(0.6);
+            transform: none
+        }
+
+        .photo .lockOverlay {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(180deg, rgba(2, 6, 23, 0.35), rgba(2, 6, 23, 0.65));
+            color: var(--soft);
+            font-weight: 700;
+            font-size: 14px
+        }
+
+        /* Modal slideshow */
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(2, 6, 23, 0.85);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 200
+        }
+
+        .modal.open {
+            display: flex
+        }
+
+        .slide {
+            max-width: 95%;
+            max-height: 90%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative
+        }
+
+        .slide img {
+            max-width: 100%;
+            max-height: 100%;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(2, 6, 23, 0.8)
+        }
+
+        .modal .close {
+            position: absolute;
+            top: 18px;
+            right: 22px;
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: var(--soft);
+            padding: 8px;
+            border-radius: 8px;
+            cursor: pointer
+        }
+
+        .nav {
+            position: absolute;
+            left: 12px;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            justify-content: space-between;
+            pointer-events: none
+        }
+
+        .nav button {
+            pointer-events: auto;
+            background: rgba(0, 0, 0, 0.45);
+            border: none;
+            color: var(--soft);
+            padding: 12px;
+            border-radius: 10px;
+            cursor: pointer
+        }
+
+        /* Quiz (premium card) */
+        .quiz-card {
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            padding: 18px;
+            border-radius: 12px;
+            margin-top: 18px
+        }
+
+        .premium-badge {
+            display: inline-block;
+            background: linear-gradient(90deg, #ffd166, #ff6b6b);
+            color: #111;
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-weight: 800;
+            margin-left: 8px;
+            font-size: 12px
+        }
+
+        .q-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between
+        }
+
+        .q-number {
+            font-size: 13px;
+            color: rgba(203, 213, 225, 0.7)
+        }
+
+        .question {
+            margin-top: 12px;
+            font-size: 18px;
+            color: white
+        }
+
+        .options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 12px
+        }
+
+        .opt {
+            background: var(--card);
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.02);
+            cursor: pointer;
+            transition: transform .12s, box-shadow .12s
+        }
+
+        .opt:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(2, 6, 23, 0.6)
+        }
+
+        .opt.selected {
+            outline: 3px solid rgba(255, 107, 107, 0.18)
+        }
+
+        .opt.correct {
+            background: linear-gradient(90deg, #a8ff78, #90e0ef);
+            color: #071028;
+            font-weight: 700
+        }
+
+        .opt.wrong {
+            opacity: 0.6;
+            text-decoration: line-through
+        }
+
+        .q-actions {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+            margin-top: 12px
+        }
+
+        .progress {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 999px;
+            overflow: hidden
+        }
+
+        .progress>div {
+            height: 100%;
+            background: linear-gradient(90deg, #ff6b6b, #ffa94d);
+            width: 0
+        }
+
+        footer {
+            margin-top: 20px;
+            color: rgba(203, 213, 225, 0.6);
+            font-size: 13px;
+            text-align: center
+        }
+
+        @media (max-width:640px) {
+            .hero {
+                flex-direction: column;
+                align-items: flex-start
+            }
+
+            .hero .cta {
+                align-self: stretch;
+                flex-direction: row;
+                justify-content: space-between
+            }
+
+            .photo img {
+                height: 130px
+            }
+
+            .options {
+                grid-template-columns: 1fr
+            }
+
+            .opt {
+                font-size: 14px
+            }
+        }
+
+        #confetti {
+            position: fixed;
+            left: 0;
+            top: 0;
+            pointer-events: none;
+            z-index: 300
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Heart background layer -->
+    <div id="heart-bg" aria-hidden="true"></div>
+
+    <canvas id="confetti"></canvas>
+    <div class="container">
+        <header>
+            <div class="brand">
+                <div class="logo">❤</div>
+                <div>
+                    <h1>Happy 6 Months <span class="premium-badge">PREMIUM</span></h1>
+                    <p>Surprise page — made with love ❤️</p>
+                </div>
+            </div>
+            <div>
+                <small>Made by you • 🌟 Dec 1</small>
+            </div>
+        </header>
+
+        <section class="hero">
+            <div class="left">
+                <h2>To my special one — surprise!</h2>
+                <p>Aaj 6 mahine pure ho rahe hain. Yeh chhota sa page tumhare liye banaya hai — photos, yaadein aur
+                    thoda sa pyaar.</p>
+
+                <div class="countdown" id="countdown">
+                    <div class="box">
+                        <div class="num" id="days">--</div>
+                        <div class="lbl">Days</div>
+                    </div>
+                    <div class="box">
+                        <div class="num" id="hours">--</div>
+                        <div class="lbl">Hours</div>
+                    </div>
+                    <div class="box">
+                        <div class="num" id="mins">--</div>
+                        <div class="lbl">Mins</div>
+                    </div>
+                    <div class="box">
+                        <div class="num" id="secs">--</div>
+                        <div class="lbl">Secs</div>
+                    </div>
+                    <div id="loveMsg" class="love-msg">I love uhh Aalsii🥹❤️</div>
+                </div>
+            </div>
+
+            <div class="cta">
+                <button class="btn" id="celebrateBtn">Celebrate 🎉</button>
+                <button class="btn secondary" id="openGalleryBtn">View Photos</button>
+            </div>
+        </section>
+
+        <section>
+            <div class="gallery" id="gallery">
+                <!-- 5 images mapped to 5 questions. Locked until correct answer. -->
+                <div class="photo locked" data-index="0"><img src="images/photo1.jpg" alt="Photo 1">
+                    <div class="caption">Memory 1</div>
+                    <div class="lockOverlay">Answer Q1 to unlock</div>
+                </div>
+                <div class="photo locked" data-index="1"><img src="images/photo2.jpg" alt="Photo 2">
+                    <div class="caption">Memory 2</div>
+                    <div class="lockOverlay">Answer Q2 to unlock</div>
+                </div>
+                <div class="photo locked" data-index="2"><img src="images/photo3.jpg" alt="Photo 3">
+                    <div class="caption">Memory 3</div>
+                    <div class="lockOverlay">Answer Q3 to unlock</div>
+                </div>
+                <div class="photo locked" data-index="3"><img src="images/photo4.jpg" alt="Photo 4">
+                    <div class="caption">Memory 4</div>
+                    <div class="lockOverlay">Answer Q4 to unlock</div>
+                </div>
+                <div class="photo locked" data-index="4"><img src="images/photo5.jpg" alt="Photo 5">
+                    <div class="caption">Memory 5</div>
+                    <div class="lockOverlay">Answer Q5 to unlock</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- QUIZ: Premium feel -->
+        <section class="quiz-card" id="quizCard">
+            <div class="q-header">
+                <div>
+                    <div class="q-number" id="qNumber">Question 1 of 5</div>
+                    <div class="question" id="questionText">Loading question...</div>
+                </div>
+                <div style="text-align:right">
+                    <div style="font-size:12px;color:rgba(203,213,225,0.7)">Earn points • Unlock memories</div>
+                    <div class="progress" style="width:120px;margin-top:8px">
+                        <div id="progressBar"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="options" id="options">
+                <!-- option buttons injected by JS -->
+            </div>
+
+            <div class="q-actions">
+                <button class="btn secondary" id="skipBtn">Skip</button>
+                <button class="btn" id="nextBtn" disabled>Submit</button>
+            </div>
+        </section>
+
+        <!-- Modal slideshow -->
+        <div id="modal" class="modal" aria-hidden="true">
+            <div class="slide">
+                <button class="close" id="closeModal">Close ✕</button>
+                <div class="nav">
+                    <button id="prevBtn">◀</button>
+                    <button id="nextBtnImg">▶</button>
+                </div>
+                <img id="modalImg" src="" alt="enlarged photo">
+            </div>
+        </div>
+
+        <footer>
+            <small>Tip: Replace `images/photoX.jpg` with your photos. Open this file in browser (double-click) or host
+                on GitHub Pages.</small>
+        </footer>
+    </div>
+
+    <script>
+        // ===== Heart background generation =====
+        (function generateHearts() {
+            const bg = document.getElementById('heart-bg');
+            const count = 35; // number of hearts
+            const W = window.innerWidth; const H = window.innerHeight;
+            for (let i = 0; i < count; i++) {
+                const el = document.createElement('div'); el.className = 'heart';
+                const size = Math.round(Math.random() * 36) + 18; el.style.width = size + 'px'; el.style.height = size + 'px';
+                el.style.left = Math.random() * 110 - 5 + '%';
+                el.style.top = Math.random() * 110 - 5 + '%';
+                el.style.opacity = (0.06 + Math.random() * 0.2).toFixed(2);
+                const dur = (6 + Math.random() * 8).toFixed(2) + 's';
+                const delay = (Math.random() * 3).toFixed(2) + 's';
+                el.style.animation = `floatUp ${dur} linear ${delay} infinite`;
+                // random hue shift for variety
+                const hue = 340 + Math.round(Math.random() * 20);
+                el.style.setProperty('--heart-hue', hue);
+                bg.appendChild(el);
+            }
+            // regenerate on resize for responsiveness
+            window.addEventListener('resize', () => { bg.innerHTML = ''; generateHearts(); }, { once: true });
+        })();
+
+        // ===== Countdown (Dec 1) =====
+        function updateCountdown() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const dec1 = new Date(year, 11, 1, 0, 0, 0);
+            let finalTarget = dec1;
+            if (now >= dec1) finalTarget = new Date(year + 1, 11, 1, 0, 0, 0);
+            const diff = finalTarget - now;
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const secs = Math.floor((diff % (1000 * 60)) / 1000);
+            document.getElementById('days').textContent = days;
+            document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+            document.getElementById('mins').textContent = String(mins).padStart(2, '0');
+            document.getElementById('secs').textContent = String(secs).padStart(2, '0');
+
+            // show the little love message animation every second
+            animateLove();
+        }
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+
+        function animateLove() {
+            const el = document.getElementById('loveMsg');
+            if (!el) return;
+            // restart animation by changing animationName
+            el.style.animation = 'none';
+            // force reflow
+            void el.offsetWidth;
+            el.style.animation = 'lovePop 900ms ease-out forwards';
+        }
+
+        // ===== Gallery & Modal slideshow (locked until correct answer) =====
+        const photos = Array.from(document.querySelectorAll('.photo'));
+        const modal = document.getElementById('modal');
+        const modalImg = document.getElementById('modalImg');
+        let currentIndex = 0;
+
+        function openModal(idx) {
+            const photoEl = document.querySelector(`.photo[data-index=\"${idx}\"]`);
+            if (!photoEl || photoEl.classList.contains('locked')) return; // do nothing if locked
+            const img = photoEl.querySelector('img').src;
+            modalImg.src = img;
+            modal.classList.add('open');
+            modal.setAttribute('aria-hidden', 'false');
+            currentIndex = idx;
+        }
+        function closeModal() { modal.classList.remove('open'); modal.setAttribute('aria-hidden', 'true'); }
+
+        // Attach click handlers but block clicks when locked
+        photos.forEach((p, i) => p.addEventListener('click', () => {
+            if (!p.classList.contains('locked')) openModal(i); else {
+                // If locked, focus the quiz on that question
+                alert('Answer Question ' + (i + 1) + ' correctly to unlock this photo!');
+                // scroll quiz into view
+                document.getElementById('quizCard').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }));
+
+        document.getElementById('openGalleryBtn').addEventListener('click', () => {
+            // open first unlocked image or notify if none
+            const unlocked = document.querySelector('.photo:not(.locked)');
+            if (unlocked) openModal(Number(unlocked.dataset.index)); else alert('No photos unlocked yet. Answer the first question to unlock!');
+        });
+        document.getElementById('closeModal').addEventListener('click', closeModal);
+        document.getElementById('prevBtn').addEventListener('click', () => {
+            let prev = (currentIndex - 1 + photos.length) % photos.length;
+            // find previous unlocked going backward
+            for (let i = 0; i < photos.length; i++) { const idx = (currentIndex - 1 - i + photos.length) % photos.length; if (!photos[idx].classList.contains('locked')) { prev = idx; break; } }
+            openModal(prev);
+        });
+        document.getElementById('nextBtnImg').addEventListener('click', () => {
+            // next unlocked forward
+            for (let i = 1; i <= photos.length; i++) { const idx = (currentIndex + i) % photos.length; if (!photos[idx].classList.contains('locked')) { openModal(idx); break; } }
+        });
+        document.addEventListener('keydown', (e) => { if (modal.classList.contains('open')) { if (e.key === 'ArrowRight') document.getElementById('nextBtnImg').click(); if (e.key === 'ArrowLeft') document.getElementById('prevBtn').click(); if (e.key === 'Escape') closeModal(); } });
+        modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+
+        // ===== Confetti (same as before) =====
+        const confettiCanvas = document.getElementById('confetti');
+        const ctx = confettiCanvas.getContext('2d');
+        let W = window.innerWidth, H = window.innerHeight; confettiCanvas.width = W; confettiCanvas.height = H;
+        window.addEventListener('resize', () => { W = window.innerWidth; H = window.innerHeight; confettiCanvas.width = W; confettiCanvas.height = H; });
+        function random(min, max) { return Math.random() * (max - min) + min; }
+        class Particle { constructor() { this.reset(); } reset() { this.x = random(0, W); this.y = random(-H, 0); this.r = random(6, 12); this.d = random(10, 30); this.color = ['#ff6b6b', '#ffd166', '#90e0ef', '#a8ff78', '#f97f51'][Math.floor(Math.random() * 5)]; this.tilt = random(-10, 10); this.tiltSpeed = random(0.05, 0.12); this.speed = random(1, 4); } update() { this.y += this.speed; this.tilt += this.tiltSpeed; if (this.y > H + 20) this.reset(); } draw() { ctx.beginPath(); ctx.save(); ctx.translate(this.x, this.y); ctx.rotate(this.tilt * Math.PI / 180); ctx.fillStyle = this.color; ctx.fillRect(-this.r / 2, -this.r / 2, this.r, this.r / 2); ctx.restore(); } }
+        let particles = []; function startConfetti(count = 80) { particles = Array.from({ length: count }, () => new Particle()); runConfetti = true; requestAnimationFrame(loop); setTimeout(() => runConfetti = false, 4500); }
+        let runConfetti = false; function loop() { if (!runConfetti) { ctx.clearRect(0, 0, W, H); return; } ctx.clearRect(0, 0, W, H); particles.forEach(p => { p.update(); p.draw(); }); requestAnimationFrame(loop); }
+        document.getElementById('celebrateBtn').addEventListener('click', () => startConfetti(120));
+
+        // ===== QUIZ: Questions data =====
+        // You can edit these questions, or I can update them for you. Correct answers are 0-based index in `answer`.
+        const questions = [
+            {
+                q: "Where did we first meet?",
+                opts: ["At college", "At a cafe", "At a friend's party", "Online"], answer: 2
+            },
+            {
+                q: "Which is her favourite color?",
+                opts: ["Blue", "Red", "Green", "Pink"], answer: 3
+            },
+            {
+                q: "Which movie did we watch together first?",
+                opts: ["Inception", "The Notebook", "Interstellar", "Avatar"], answer: 1
+            },
+            {
+                q: "What's her favourite snack?",
+                opts: ["Chips", "Samosa", "Chocolate", "Pani Puri"], answer: 2
+            },
+            {
+                q: "Which place is on our bucket list?",
+                opts: ["Maldives", "Paris", "Manali", "Goa"], answer: 0
+            }
+        ];
+
+        // ===== Quiz state & UI =====
+        let currentQ = 0; let score = 0; let answered = false;
+        const qNumber = document.getElementById('qNumber');
+        const questionText = document.getElementById('questionText');
+        const optionsWrap = document.getElementById('options');
+        const nextBtn = document.getElementById('nextBtn');
+        const skipBtn = document.getElementById('skipBtn');
+        const progressBar = document.getElementById('progressBar');
+
+        function renderQuestion() {
+            const item = questions[currentQ];
+            qNumber.textContent = `Question ${currentQ + 1} of ${questions.length}`;
+            questionText.textContent = item.q;
+            optionsWrap.innerHTML = '';
+            item.opts.forEach((opt, i) => {
+                const b = document.createElement('button');
+                b.className = 'opt'; b.innerText = opt; b.dataset.index = i;
+                b.addEventListener('click', () => selectOption(b, i));
+                optionsWrap.appendChild(b);
+            });
+            answered = false; nextBtn.disabled = true;
+            progressBar.style.width = `${Math.round((currentQ / questions.length) * 100)}%`;
+        }
+
+        function selectOption(button, idx) {
+            if (answered) return; // prevent re-select
+            // mark selected
+            document.querySelectorAll('.opt').forEach(el => el.classList.remove('selected'));
+            button.classList.add('selected');
+            nextBtn.disabled = false;
+        }
+
+        nextBtn.addEventListener('click', () => {
+            if (answered) return; // already processed
+            const sel = document.querySelector('.opt.selected');
+            if (!sel) return; // safety
+            const chosen = Number(sel.dataset.index);
+            const correct = questions[currentQ].answer;
+            // show correct/wrong styles
+            document.querySelectorAll('.opt').forEach((o) => {
+                const idx = Number(o.dataset.index);
+                if (idx === correct) o.classList.add('correct');
+                if (idx === chosen && idx !== correct) o.classList.add('wrong');
+                o.classList.remove('selected');
+            });
+            answered = true;
+            if (chosen === correct) {
+                score += 1;
+                // unlock corresponding photo
+                const ph = document.querySelector(`.photo[data-index=\"${currentQ}\"]`);
+                if (ph && ph.classList.contains('locked')) {
+                    ph.classList.remove('locked');
+                    // small highlight animation
+                    ph.style.transition = 'box-shadow .4s, transform .35s';
+                    ph.style.transform = 'scale(1.02)';
+                    setTimeout(() => ph.style.transform = '', 400);
+                }
+            }
+
+            // after short pause, move to next question automatically
+            setTimeout(() => {
+                currentQ += 1;
+                progressBar.style.width = `${Math.round((currentQ / questions.length) * 100)}%`;
+                if (currentQ < questions.length) renderQuestion(); else showResult();
+            }, 900);
+        });
+
+        skipBtn.addEventListener('click', () => {
+            // skipping does NOT unlock photo
+            currentQ += 1; progressBar.style.width = `${Math.round((currentQ / questions.length) * 100)}%`;
+            if (currentQ < questions.length) renderQuestion(); else showResult();
+        });
+
+        function showResult() {
+            const percent = Math.round((score / questions.length) * 100);
+            const msg = `You scored ${score} / ${questions.length} (${percent}%)`;
+            if (percent >= 80) startConfetti(150);
+            const res = document.createElement('div');
+            res.style.position = 'fixed'; res.style.left = '50%'; res.style.top = '50%'; res.style.transform = 'translate(-50%,-50%)';
+            res.style.background = 'linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01))';
+            res.style.border = '1px solid rgba(255,255,255,0.06)'; res.style.padding = '20px'; res.style.borderRadius = '12px'; res.style.zIndex = 400;
+            res.innerHTML = `<div style="font-size:18px;font-weight:800;color:white;margin-bottom:8px">Quiz Result</div><div style="margin-bottom:12px">${msg}</div><div style="display:flex;gap:8px;justify-content:flex-end"><button id=playAgain class=\"btn secondary\">Play Again</button><button id=closeRes class=\"btn\">Close</button></div>`;
+            document.body.appendChild(res);
+            document.getElementById('closeRes').addEventListener('click', () => { res.remove(); resetQuiz(); });
+            document.getElementById('playAgain').addEventListener('click', () => { res.remove(); resetQuiz(); });
+        }
+
+        function resetQuiz() {
+            currentQ = 0; score = 0; progressBar.style.width = '0%';
+            // re-lock all photos
+            document.querySelectorAll('.photo').forEach(p => { if (!p.classList.contains('locked')) p.classList.add('locked'); });
+            renderQuestion();
+        }
+        // initial render
+        renderQuestion();
+
+    </script>
+</body>
+
+</html>

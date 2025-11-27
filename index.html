@@ -37,6 +37,64 @@
             overflow-x: hidden
         }
 
+        /* Simple client-side password overlay (not secure for public secrets) */
+        #authOverlay {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(2, 6, 23, 0.95), rgba(2, 6, 23, 0.98));
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px)
+        }
+
+        .authBox {
+            width: 320px;
+            padding: 22px;
+            border-radius: 12px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            text-align: center
+        }
+
+        .authBox h2 {
+            margin: 0 0 8px 0;
+            font-size: 20px
+        }
+
+        .authBox p {
+            margin: 0 0 14px 0;
+            color: rgba(203, 213, 225, 0.8);
+            font-size: 14px
+        }
+
+        .authBox input {
+            width: 100%;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            background: transparent;
+            color: var(--soft);
+            margin-bottom: 10px
+        }
+
+        .authBox button {
+            padding: 10px 12px;
+            border-radius: 10px;
+            border: none;
+            background: var(--accent);
+            font-weight: 800;
+            color: #111;
+            cursor: pointer
+        }
+
+        .authHint {
+            margin-top: 10px;
+            font-size: 12px;
+            color: rgba(203, 213, 225, 0.6)
+        }
+
         /* HEART BACKGROUND */
         #heart-bg {
             position: fixed;
@@ -500,6 +558,19 @@
 </head>
 
 <body>
+    <!-- AUTH OVERLAY -->
+    <div id="authOverlay" aria-hidden="false">
+        <div class="authBox">
+            <h2>Enter Secret Code</h2>
+            <p>Only those with the code can view this surprise page.</p>
+            <input id="authInput" type="password" placeholder="Enter code" autocomplete="off" />
+            <div style="display:flex;gap:8px;justify-content:center;margin-top:6px">
+                <button id="authBtn">Unlock</button>
+            </div>
+            <div class="authHint">Tip: change the password in the script variable <code>PASSWORD</code>.</div>
+        </div>
+    </div>
+
     <!-- Heart background layer -->
     <div id="heart-bg" aria-hidden="true"></div>
 
@@ -541,7 +612,7 @@
                         <div class="num" id="secs">--</div>
                         <div class="lbl">Secs</div>
                     </div>
-                    <div id="loveMsg" class="love-msg">I love uhh aalsii❤️</div>
+                    <div id="loveMsg" class="love-msg">I love uhh</div>
                 </div>
             </div>
 
@@ -554,23 +625,23 @@
         <section>
             <div class="gallery" id="gallery">
                 <!-- 5 images mapped to 5 questions. Locked until correct answer. -->
-                <div class="photo locked" data-index="0"><img src="/img1.jpg" alt="Photo 1">
+                <div class="photo locked" data-index="0"><img src="images/photo1.jpg" alt="Photo 1">
                     <div class="caption">Memory 1</div>
                     <div class="lockOverlay">Answer Q1 to unlock</div>
                 </div>
-                <div class="photo locked" data-index="1"><img src="/img2.jpg" alt="Photo 2">
+                <div class="photo locked" data-index="1"><img src="images/photo2.jpg" alt="Photo 2">
                     <div class="caption">Memory 2</div>
                     <div class="lockOverlay">Answer Q2 to unlock</div>
                 </div>
-                <div class="photo locked" data-index="2"><img src="/img3.jpg" alt="Photo 3">
+                <div class="photo locked" data-index="2"><img src="images/photo3.jpg" alt="Photo 3">
                     <div class="caption">Memory 3</div>
                     <div class="lockOverlay">Answer Q3 to unlock</div>
                 </div>
-                <div class="photo locked" data-index="3"><img src="/img4.jpg" alt="Photo 4">
+                <div class="photo locked" data-index="3"><img src="images/photo4.jpg" alt="Photo 4">
                     <div class="caption">Memory 4</div>
                     <div class="lockOverlay">Answer Q4 to unlock</div>
                 </div>
-                <div class="photo locked" data-index="4"><img src="/img5.jpg" alt="Photo 5">
+                <div class="photo locked" data-index="4"><img src="images/photo5.jpg" alt="Photo 5">
                     <div class="caption">Memory 5</div>
                     <div class="lockOverlay">Answer Q5 to unlock</div>
                 </div>
@@ -621,6 +692,40 @@
     </div>
 
     <script>
+        // ===== PASSWORD CONFIG =====
+        // NOTE: This is client-side protection (JS). It's fine for casual privacy but not secure against anyone who inspects the source.
+        const PASSWORD = 'love123'; // change this value to whatever code you want
+        const STORAGE_KEY = 'surprise_unlocked_v1'; // stores unlocked state so page won't ask repeatedly on the same browser
+
+        // ===== Auth logic =====
+        const authOverlay = document.getElementById('authOverlay');
+        const authInput = document.getElementById('authInput');
+        const authBtn = document.getElementById('authBtn');
+
+        function unlockUI() {
+            authOverlay.style.display = 'none';
+            authOverlay.setAttribute('aria-hidden', 'true');
+            // remember unlock
+            try { localStorage.setItem(STORAGE_KEY, '1'); } catch (e) { }
+        }
+
+        function lockUI() {
+            authOverlay.style.display = 'flex';
+            authOverlay.setAttribute('aria-hidden', 'false');
+        }
+
+        authBtn.addEventListener('click', () => {
+            const v = authInput.value || '';
+            if (v === PASSWORD) { unlockUI(); } else { authInput.value = ''; authInput.focus(); alert('Wrong code — try again'); }
+        });
+
+        authInput.addEventListener('keyup', (e) => { if (e.key === 'Enter') authBtn.click(); });
+
+        // auto-check localStorage
+        try {
+            if (localStorage.getItem(STORAGE_KEY) === '1') unlockUI(); else lockUI();
+        } catch (e) { lockUI(); }
+
         // ===== Heart background generation =====
         (function generateHearts() {
             const bg = document.getElementById('heart-bg');

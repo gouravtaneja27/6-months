@@ -620,7 +620,7 @@
         <section>
             <div class="gallery" id="gallery">
                 <!-- 5 images mapped to 5 questions. Locked until correct answer. -->
-                <div class="photo locked" data-index="0"><img src="" alt="Photo 1">
+                <div class="photo locked" data-index="0"><img src="images/photo1.jpg" alt="Photo 1">
                     <div class="caption">Memory 1</div>
                     <div class="lockOverlay">Answer Q1 to unlock</div>
                 </div>
@@ -744,27 +744,29 @@
             window.addEventListener('resize', () => { bg.innerHTML = ''; generateHearts(); }, { once: true });
         })();
 
-        // ===== Countdown (Dec 1) =====
-        function updateCountdown() {
+        // ===== Time together (since May 1, 2025) =====
+        function updateUptime() {
+            // start date: May 1, 2025 at 00:00:00 local time
+            const start = new Date(2025, 4, 1, 0, 0, 0); // months are 0-indexed (4 = May)
             const now = new Date();
-            const year = now.getFullYear();
-            const target = new Date(year, 10, 28, 9, 0, 0);
-            let finalTarget = target;
-            const diff = finalTarget - now;
+            let diff = now - start; // milliseconds since start
+            if (diff < 0) diff = 0; // don't show negative before start
+
             const days = Math.floor(diff / (1000 * 60 * 60 * 24));
             const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
             const secs = Math.floor((diff % (1000 * 60)) / 1000);
+
             document.getElementById('days').textContent = days;
             document.getElementById('hours').textContent = String(hours).padStart(2, '0');
             document.getElementById('mins').textContent = String(mins).padStart(2, '0');
             document.getElementById('secs').textContent = String(secs).padStart(2, '0');
 
-            // show the little love message animation every second
+            // animate love message every second
             animateLove();
         }
-        updateCountdown();
-        setInterval(updateCountdown, 1000);
+        updateUptime();
+        setInterval(updateUptime, 1000);
 
         function animateLove() {
             const el = document.getElementById('loveMsg');
